@@ -7,7 +7,7 @@
     <div class="row">
         <div class="page-header">
             <div class="d-flex align-items-center">
-                <h2 class="page-header-title">Senior Pastors Personal Info</h2>
+                <h2 class="page-header-title">Church Info</h2>
                 <div>
                 <ul class="breadcrumb">
                        <li>
@@ -88,7 +88,7 @@
             <div class="widget has-shadow">
 
                 <div class="widget-header bordered d-flex align-items-center">
-                    <h4 class="col-xl-3">Personal Profile</h4>
+                    <h4 class="col-xl-3">Church Profile</h4>
                     <ul class="social-network col-xl-9">
                         <li>
                             <img width="40"  src="{{asset('church/img/avatar/avatar-02.jpg')}}" alt="..." class="rounded-circle mx-auto">
@@ -120,7 +120,7 @@ Suspendisse ac accumsan velit. Nulla volutpat suscipit tortor ac fermentum. Etia
                     </div>
                      <div class="col-12 table-header-bg">
                         <div class="section-title mb-3">
-                            <h4 class="pt-3 pb-3">Personnal Informations</h4>
+                            <h4 class="pt-3 pb-3">Church Informations</h4>
                         </div>
                     </div>
 
