@@ -1,0 +1,139 @@
+
+.menu-btn{
+    display: inline-table;
+}
+/* Utilities Classes */
+.badge-text.warning {background: #F0AD4E;}
+.black {color: #000;}
+.full-width {width: 100%;}
+.text-instagram {color: #C13584 !important;}
+.text-color-hbd {color: #833AB4 !important; font-size: 1.2rem !important;}
+.heart-hbd {color: #e76c90 !important; font-size: 1.4rem !important;}
+.table_image {
+    width: auto !important;
+    height: 35px !important;
+    border: 2px solid #c4c9d2 !important;
+    border-radius: 4px !important;
+}
+.flex-space-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.material-input textarea {
+    font-size: 1rem;
+    padding: 10px 10px 10px 5px;
+    display: block;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #e4e8f0;
+}
+
+button, textarea {
+    outline: none!important;
+}
+
+.table .td-actions a i.view:hover {
+    background: rgba(84, 227, 142, 1);
+    color: #fff;
+}
+
+.table .td-actions a i.delete:hover {
+    background: rgba(254, 25, 94, 1);
+    color: #fff;
+}
+
+.table .td-actions button i {
+    background: transparent;
+    color: rgba(52,40,104,.4);
+    font-size: 1.6rem;
+    padding: .5rem;
+    border-radius: 50%;
+    transition: all 0.4s ease;
+}
+
+.table .td-actions button i.delete:hover {
+    background: rgba(254, 25, 94, 1);
+    color: #fff;
+}
+
+.td-actions {
+    display: flex;
+    justify-content: center;
+}
+
+td.td-actions button {
+    border: 0 !important;
+    background-color: transparent !important;
+}
+
+.event_logo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.event-logo img {
+    width: 100px;
+    height: 100px;
+    border-radius: 100px;
+    border-style: solid;
+    border-width: 5px;
+    border-color: rgba(84, 227, 142, 1);
+}
+
+@media only screen and (max-width: 768px) {
+    .mb-xs {
+        margin-bottom: 1rem !important;
+    }
+}
+
+.event_planner_schedule-title h2 {
+    color: #2c304d;
+    font-size: 1.2rem;
+    margin-left: -12px !important;
+}
+/*------- Table Style -----------*/
+/*.table thead tr th,.table td {
+text-align: center;
+}*/
+.export-header {
+    padding: 0px 15px 0px 15px;
+}
+.bg-light-ash {
+    background: #dddcde;
+}
+.table-header-bg {
+    background: #F5F4F7;
+}
+.table-text-color {
+    color: #5d5386;
+}
+.giving-table thead tr th{
+border: 1px solid #c9c8ca;
+}
+
+/*---------- nav link ---------*/
+.nav-link {
+    padding: 5px;
+}
+.profile-tabs li {
+    width: 33.33%;
+    text-align: center;
+}
+/*----- invoice ------*/
+.invoice-container {
+    width: 100%;
+}
+/*------- Note --------*/
+.note-photo {
+    padding-right: 10px;
+}
+/*-------- select live search --------*/
+.bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+    width: 100%;
+}
+.btn-light {
+    border-radius: 0px !important;
+}
