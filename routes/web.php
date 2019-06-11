@@ -129,9 +129,12 @@ Route::get('/admin/event_speakers/delete', function () {
 });
 
 // Ministry Planner
-Route::get('/admin/ministry_planner', function () {
-    return view('admin.pages.clergy.ministry.index');
-});
+Route::get('/admin/ministry_planner', 'MinistriesController@ministry_planner')->name('ministries.ministry_planner');
+//Route::get('/admin/ministry_planner', 'MinistriesController@event')->name('ministries.event');
+
+//Route::get('/admin/ministry_planner', function () {
+//    return view('admin.pages.clergy.ministry.index');
+//});
 
 
 

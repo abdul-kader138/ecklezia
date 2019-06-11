@@ -11,6 +11,8 @@ use App\People;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Image;
+use App\CalendarEvent;
+
 class MinistriesController extends Controller
 {
     /**
@@ -20,9 +22,9 @@ class MinistriesController extends Controller
      */
     public function index()
     {
-        $ministries = Ministry::orderBy('id','desc')->get();
+        $ministries = Ministry::orderBy('id', 'desc')->get();
         $peoples = People::get();
-        return view('admin.ministries.index',compact('ministries','peoples'));
+        return view('admin.ministries.index', compact('ministries', 'peoples'));
     }
 
     /**
@@ -38,7 +40,7 @@ class MinistriesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -48,7 +50,7 @@ class MinistriesController extends Controller
             'ministry_name' => 'required',
             'ministry_status' => 'required',
             'phone' => 'required',
-            'image'=>[new MimeCheckRules(['jpg','png'])]
+            'image' => [new MimeCheckRules(['jpg', 'png'])]
         ]);
         $ministry = new Ministry();
         $ministry->ministry = $request->ministry;
@@ -58,20 +60,20 @@ class MinistriesController extends Controller
         $ministry->phone = $request->phone;
         $ministry->meeting_time = $request->meeting_time;
         $ministry->events = $request->events;
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')) {
             $path = 'uploads/images/ministry/';
-            $ministry->image = 'ministry_'.time().'.'.$request->image->getClientOriginalExtension();
-            Image::make($request->image)->resize(100,100)->save($path.$ministry->image);
+            $ministry->image = 'ministry_' . time() . '.' . $request->image->getClientOriginalExtension();
+            Image::make($request->image)->resize(100, 100)->save($path . $ministry->image);
         }
         $ministry->save();
 
-        return redirect()->route('admin.ministries.index')->with('success','Save Successful');
+        return redirect()->route('admin.ministries.index')->with('success', 'Save Successful');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -79,26 +81,26 @@ class MinistriesController extends Controller
         $ministry = Ministry::findOrFail($id);
         $peoples = People::get();
 
-        return view('admin.ministries.view',compact('ministry','peoples'));
+        return view('admin.ministries.view', compact('ministry', 'peoples'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         $ministry = Ministry::findOrFail($id);
-        return view('admin.ministries.edit',compact('ministry'));
+        return view('admin.ministries.edit', compact('ministry'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -108,7 +110,7 @@ class MinistriesController extends Controller
             'ministry_name' => 'required',
             'ministry_status' => 'required',
             'phone' => 'required',
-            'image'=>[new MimeCheckRules(['jpg','png'])]
+            'image' => [new MimeCheckRules(['jpg', 'png'])]
         ]);
 
         $ministry = Ministry::findOrFail($id);
@@ -120,22 +122,22 @@ class MinistriesController extends Controller
         $ministry->phone = $request->phone;
         $ministry->meeting_time = $request->meeting_time;
         $ministry->events = $request->events;
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')) {
             $path = 'uploads/images/ministry/';
-            @unlink($path.$ministry->image);
-            $ministry->image = 'ministry_'.time().'.'.$request->image->getClientOriginalExtension();
-            Image::make($request->image)->resize(100,100)->save($path.$ministry->image);
+            @unlink($path . $ministry->image);
+            $ministry->image = 'ministry_' . time() . '.' . $request->image->getClientOriginalExtension();
+            Image::make($request->image)->resize(100, 100)->save($path . $ministry->image);
         }
         $ministry->save();
 
-        return redirect()->route('admin.ministries.index')->with('success','Update Successful');
+        return redirect()->route('admin.ministries.index')->with('success', 'Update Successful');
 
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -143,101 +145,149 @@ class MinistriesController extends Controller
         $ministry = Ministry::findOrFail($id);
         $ministry->delete();
 
-        return redirect()->route('admin.ministries.index')->with('success','Delete Successful');
+        return redirect()->route('admin.ministries.index')->with('success', 'Delete Successful');
 
     }
 
-    public function addMember(Request $request){
-        $this->validate($request,[
-            'people_id'=>'required|integer',
-            'ministry_id'=>'required|integer'
+    public function addMember(Request $request)
+    {
+        $this->validate($request, [
+            'people_id' => 'required|integer',
+            'ministry_id' => 'required|integer'
         ]);
-        if(MinistryMember::where([
-            'people_id'=>$request->people_id,
-            'ministry_id'=>$request->ministry_id,
-        ])->first()){
-            return back()->with('error','This Member Already Added');
+        if (MinistryMember::where([
+            'people_id' => $request->people_id,
+            'ministry_id' => $request->ministry_id,
+        ])->first()) {
+            return back()->with('error', 'This Member Already Added');
         }
         $add_member = new MinistryMember();
         $add_member->people_id = $request->people_id;
         $add_member->ministry_id = $request->ministry_id;
         $add_member->save();
-        return back()->with('success','Member Added Successful');
+        return back()->with('success', 'Member Added Successful');
 
     }
-    public function deleteMember($ministry_id,$id){
+
+    public function deleteMember($ministry_id, $id)
+    {
         $notes = Ministry::findOrFail($ministry_id)->member()->detach($id);
-        return back()->with('success','Member Deleted Successful');
-    }
-    public function note(){
-        $notes = MinistryNote::latest()->get();
-        return view('admin.ministries.note.index',compact('notes'));
+        return back()->with('success', 'Member Deleted Successful');
     }
 
-    public function addNote(Request $request,$id){
-        $this->validate($request,[
-            'notes'=>'required',
+    public function note()
+    {
+        $notes = MinistryNote::latest()->get();
+        return view('admin.ministries.note.index', compact('notes'));
+    }
+
+    public function addNote(Request $request, $id)
+    {
+        $this->validate($request, [
+            'notes' => 'required',
         ]);
         $add_note = new MinistryNote();
         $add_note->ministry_id = $id;
         $add_note->note = $request->notes;
         $add_note->save();
-        return back()->with('success','Note Added Successful');
+        return back()->with('success', 'Note Added Successful');
 
     }
-    public function viewNote($id){
+
+    public function viewNote($id)
+    {
         $ministry = Ministry::findOrFail($id);
         $peoples = People::get();
-        return view('admin.ministries.note.view',compact('ministry','id','peoples'));
+        return view('admin.ministries.note.view', compact('ministry', 'id', 'peoples'));
 
     }
 
-    public function deleteNote($id){
+    public function deleteNote($id)
+    {
         MinistryNote::findOrFail($id)->delete();
-        return back()->with('success','Note Delete Successful');
+        return back()->with('success', 'Note Delete Successful');
 
     }
-    public function event(){
+
+    public function event()
+    {
         $events = MinistryEvent::latest()->get();
-        return view('admin.ministries.event.index',compact('events'));
+        return view('admin.ministries.event.index', compact('events'));
     }
-    public function createEvent($id=null){
+
+    public function createEvent($id = null)
+    {
         $ministry = Ministry::get();
-        return view('admin.ministries.event.add',compact('ministry','id'));
+        return view('admin.ministries.event.add', compact('ministry', 'id'));
 
     }
-    public function addEvent(Request $request,$id){
-        $this->validate($request,[
-                'ministry_id'=>'required|integer',
-                'date'=>'required|date',
-                'description'=>'nullable',
+
+    public function addEvent(Request $request, $id)
+    {
+        $this->validate($request, [
+            'ministry_id' => 'required|integer',
+            'date' => 'required|date',
+            'description' => 'nullable',
         ]);
         $event = new MinistryEvent();
         $event->ministry_id = $id;
         $event->date = Carbon::parse($request->date);
         $event->description = $request->description;
         $event->save();
-        return back()->with('success','Event Added Successful');
+        return back()->with('success', 'Event Added Successful');
 
     }
-    public function viewEvent(Request $request,$id){
+
+    public function viewEvent(Request $request, $id)
+    {
         $ministry = Ministry::findOrFail($id);
         $peoples = People::get();
-        return view('admin.ministries.event.view',compact('ministry','id','peoples'));
+        return view('admin.ministries.event.view', compact('ministry', 'id', 'peoples'));
 
     }
 
-    public function deleteEvent($id){
+    public function deleteEvent($id)
+    {
         MinistryEvent::findOrFail($id)->delete();
-        return back()->with('success','Event Delete Successful');
+        return back()->with('success', 'Event Delete Successful');
 
     }
-    public function selectMember(Request $request){
-        $data = People::where('id',$request->id)->first();
+
+    public function selectMember(Request $request)
+    {
+        $data = People::where('id', $request->id)->first();
         return response()->json([
-            'image'=>asset('uploads/images/people/'.$data->file),
-            'email'=>$data->email,
-            'phone'=>$data->cell_number,
+            'image' => asset('uploads/images/people/' . $data->file),
+            'email' => $data->email,
+            'phone' => $data->cell_number,
         ]);
+    }
+
+    public function ministry_planner()
+    {
+        $events = CalendarEvent::get()->map(function ($item, $key) {
+            return [
+                'id' => $item->id,
+                'title' => $item->title,
+                'lat' => $item->lat,
+                'lon' => $item->lon,
+                'all_day' => $item->all_day,
+                'recurring' => $item->recurring,
+                'image' => $item->image ? asset('uploads/images/calender_event/' . $item->image) : null,
+                'description' => $item->description,
+                'start' => $item->start_time,//Y-m-d
+                'end' => $item->end_time,
+                'start_date' => $item->start_time->format('d/m/Y'),
+                'start_time' => $item->start_time->format('h:i A'),
+                'end_time' => $item->end_time->format('h:i A'),
+                'end_date' => $item->end_time->format('d/m/Y'),
+                'className' => 'fc-bg-default',
+                'color' => '#e5e5e5',
+                'delete_url' => route('admin.calendar.delete_event', $item->id),
+                'update_url' => route('admin.calendar.update_event', $item->id)
+//                'icon'=>'scissors'
+            ];
+        });
+        return view('admin.ministers.ministry_planner',compact('events'));
     }
 }
